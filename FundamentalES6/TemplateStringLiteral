@@ -1,0 +1,8 @@
+let name = 'Dimas Agung Prakasa';
+
+let gender = 'Laki-laki';
+
+console.log(name + 'memiliki jenis kelamin : ' + gender);  //gabungan string dan variable
+console.log(`${name} memiliki jenis kelamin : ${gender}`); //string literal
+
+//output "Dimas Agung Prakasa Maulayya memiliki jenis kelamin : Laki-laki"
