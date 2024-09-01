@@ -4,7 +4,7 @@ const express = require('express')
 //init app
 const app = express()
 
-//define port
+//define port for backend
 const port = 3000;
 
 //route
