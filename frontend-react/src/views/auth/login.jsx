@@ -79,10 +79,10 @@ export default function Login() {
     const passwordError = fieldError(validation, 'password');
 
     return (
-        <AuthLayout title="Selamat datang kembali 👋" subtitle="Masuk untuk membuka dashboard admin.">
+        <AuthLayout title="Welcome back 👋" subtitle="Sign in to open the admin dashboard.">
 
             {justRegistered && !loginFailed.message && (
-                <div className="alert alert-success alert-soft"><i className="bi bi-check-circle-fill"></i>Registrasi berhasil. Silakan login dengan akun barumu.</div>
+                <div className="alert alert-success alert-soft"><i className="bi bi-check-circle-fill"></i>Registration successful. Please log in with your new account.</div>
             )}
 
             {loginFailed.message && !loginFailed.errors && (
@@ -91,8 +91,8 @@ export default function Login() {
 
             {import.meta.env.VITE_DEMO === 'true' && (
                 <div className="demo-hint">
-                    <span><i className="bi bi-info-circle me-1"></i>Akun demo: <code>admin@demo.com</code> / <code>password</code></span>
-                    <button type="button" onClick={fillDemo} className="btn btn-sm btn-primary rounded-3">Isi otomatis</button>
+                    <span><i className="bi bi-info-circle me-1"></i>Demo account: <code>admin@demo.com</code> / <code>password</code></span>
+                    <button type="button" onClick={fillDemo} className="btn btn-sm btn-primary rounded-3">Fill in</button>
                 </div>
             )}
 
@@ -102,7 +102,7 @@ export default function Login() {
                     <div className="input-icon">
                         <i className="bi bi-envelope"></i>
                         <input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                            className={`form-control ${emailError ? 'is-invalid' : ''}`} placeholder="nama@email.com" />
+                            className={`form-control ${emailError ? 'is-invalid' : ''}`} placeholder="name@email.com" />
                     </div>
                     <FieldError message={emailError} />
                 </div>
@@ -112,8 +112,8 @@ export default function Login() {
                     <div className="input-icon">
                         <i className="bi bi-lock"></i>
                         <input id="password" type={showPassword ? 'text' : 'password'} autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)}
-                            className={`form-control ${passwordError ? 'is-invalid' : ''}`} placeholder="Minimal 6 karakter" />
-                        <button type="button" className="toggle-pw" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}>
+                            className={`form-control ${passwordError ? 'is-invalid' : ''}`} placeholder="At least 6 characters" />
+                        <button type="button" className="toggle-pw" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? 'Hide password' : 'Show password'}>
                             <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
                         </button>
                     </div>
@@ -121,11 +121,11 @@ export default function Login() {
                 </div>
 
                 <button type="submit" className="btn btn-primary btn-auth w-100" disabled={loading}>
-                    {loading ? <><span className="spinner-border spinner-border-sm me-2"></span>Memproses…</> : <>LOGIN <i className="bi bi-arrow-right ms-1"></i></>}
+                    {loading ? <><span className="spinner-border spinner-border-sm me-2"></span>Signing in…</> : <>LOGIN <i className="bi bi-arrow-right ms-1"></i></>}
                 </button>
             </form>
 
-            <p className="auth-switch">Belum punya akun? <Link to="/register">Daftar sekarang</Link></p>
+            <p className="auth-switch">Don’t have an account? <Link to="/register">Sign up now</Link></p>
         </AuthLayout>
     )
 }

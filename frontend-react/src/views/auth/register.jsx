@@ -19,10 +19,10 @@ function passwordStrength(pw) {
     if (/\d/.test(pw) && /[^A-Za-z0-9]/.test(pw)) score++;
     return [
         { w: '0%', c: '#e2e8f0', t: '' },
-        { w: '25%', c: '#ef4444', t: 'Lemah' },
-        { w: '50%', c: '#f59e0b', t: 'Cukup' },
-        { w: '75%', c: '#22c55e', t: 'Kuat' },
-        { w: '100%', c: '#16a34a', t: 'Sangat kuat' },
+        { w: '25%', c: '#ef4444', t: 'Weak' },
+        { w: '50%', c: '#f59e0b', t: 'Fair' },
+        { w: '75%', c: '#22c55e', t: 'Strong' },
+        { w: '100%', c: '#16a34a', t: 'Very strong' },
     ][pw ? Math.max(score, 1) : 0];
 }
 
@@ -71,7 +71,7 @@ export default function Register() {
     const passwordError = fieldError(validation, 'password');
 
     return (
-        <AuthLayout title="Buat akun baru ✨" subtitle="Gratis, dan hanya butuh kurang dari satu menit.">
+        <AuthLayout title="Create an account ✨" subtitle="It’s free and takes less than a minute.">
 
             {validation.message && !validation.errors && (
                 <div className="alert alert-danger alert-soft"><i className="bi bi-x-circle-fill"></i>{validation.message}</div>
@@ -79,11 +79,11 @@ export default function Register() {
 
             <form onSubmit={register} noValidate>
                 <div className="mb-3">
-                    <label htmlFor="name">Nama lengkap</label>
+                    <label htmlFor="name">Full name</label>
                     <div className="input-icon">
                         <i className="bi bi-person"></i>
                         <input id="name" type="text" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)}
-                            className={`form-control ${nameError ? 'is-invalid' : ''}`} placeholder="Nama lengkap" />
+                            className={`form-control ${nameError ? 'is-invalid' : ''}`} placeholder="Full name" />
                     </div>
                     <FieldError message={nameError} />
                 </div>
@@ -93,7 +93,7 @@ export default function Register() {
                     <div className="input-icon">
                         <i className="bi bi-envelope"></i>
                         <input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                            className={`form-control ${emailError ? 'is-invalid' : ''}`} placeholder="nama@email.com" />
+                            className={`form-control ${emailError ? 'is-invalid' : ''}`} placeholder="name@email.com" />
                     </div>
                     <FieldError message={emailError} />
                 </div>
@@ -103,8 +103,8 @@ export default function Register() {
                     <div className="input-icon">
                         <i className="bi bi-lock"></i>
                         <input id="password" type={showPassword ? 'text' : 'password'} autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)}
-                            className={`form-control ${passwordError ? 'is-invalid' : ''}`} placeholder="Minimal 6 karakter" />
-                        <button type="button" className="toggle-pw" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}>
+                            className={`form-control ${passwordError ? 'is-invalid' : ''}`} placeholder="At least 6 characters" />
+                        <button type="button" className="toggle-pw" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? 'Hide password' : 'Show password'}>
                             <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
                         </button>
                     </div>
@@ -114,11 +114,11 @@ export default function Register() {
                 </div>
 
                 <button type="submit" className="btn btn-primary btn-auth w-100" disabled={loading}>
-                    {loading ? <><span className="spinner-border spinner-border-sm me-2"></span>Mendaftarkan…</> : <>DAFTAR <i className="bi bi-arrow-right ms-1"></i></>}
+                    {loading ? <><span className="spinner-border spinner-border-sm me-2"></span>Creating account…</> : <>SIGN UP <i className="bi bi-arrow-right ms-1"></i></>}
                 </button>
             </form>
 
-            <p className="auth-switch">Sudah punya akun? <Link to="/login">Login di sini</Link></p>
+            <p className="auth-switch">Already have an account? <Link to="/login">Log in here</Link></p>
         </AuthLayout>
     )
 }

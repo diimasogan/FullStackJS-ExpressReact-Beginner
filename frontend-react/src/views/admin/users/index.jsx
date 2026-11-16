@@ -115,7 +115,7 @@ export default function UsersIndex() {
                                             : <tr>
                                                 <td colSpan="4" className="text-center">
                                                     <div className="alert alert-danger mb-0">
-                                                        Data Belum Tersedia!
+                                                        No data available yet!
                                                     </div>
                                                 </td>
                                             </tr>
