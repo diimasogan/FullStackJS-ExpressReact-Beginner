@@ -7,9 +7,12 @@ const Api = axios.create({
 })
 
 //mode demo (GitHub Pages): backend disimulasikan di browser, lihat services/mockApi.js
+//modul mock dimuat saat request pertama, sehingga tidak menahan aplikasi saat dimuat
 if (import.meta.env.VITE_DEMO === 'true') {
-    const { default: mockAdapter } = await import('./mockApi.js');
-    Api.defaults.adapter = mockAdapter;
+    Api.defaults.adapter = async (config) => {
+        const { default: mockAdapter } = await import('./mockApi.js');
+        return mockAdapter(config);
+    };
 }
 
 export default Api
