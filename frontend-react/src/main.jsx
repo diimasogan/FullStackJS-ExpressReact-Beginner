@@ -13,6 +13,9 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 
+//import tema tampilan
+import './styles/theme.css'
+
 //import BrowserRouter dari react router
 import { BrowserRouter } from 'react-router-dom';
 

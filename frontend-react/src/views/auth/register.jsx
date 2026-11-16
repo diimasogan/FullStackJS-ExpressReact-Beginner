@@ -1,11 +1,30 @@
 //import hook react
 import React, { useState } from "react";
 
-//import hook useNavigate from react router dom
-import { useNavigate } from "react-router-dom";
+//import hook useNavigate dan Link dari react router dom
+import { useNavigate, Link } from "react-router-dom";
 
 //import services api
 import api from '../../services/api'
+
+//import layout dan helper error field
+import AuthLayout, { FieldError, fieldError } from '../../components/AuthLayout';
+
+//indikator kekuatan password sederhana (hanya tampilan, aturan server tetap minimal 6 karakter)
+function passwordStrength(pw) {
+    let score = 0;
+    if (pw.length >= 6) score++;
+    if (pw.length >= 10) score++;
+    if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
+    if (/\d/.test(pw) && /[^A-Za-z0-9]/.test(pw)) score++;
+    return [
+        { w: '0%', c: '#e2e8f0', t: '' },
+        { w: '25%', c: '#ef4444', t: 'Lemah' },
+        { w: '50%', c: '#f59e0b', t: 'Cukup' },
+        { w: '75%', c: '#22c55e', t: 'Kuat' },
+        { w: '100%', c: '#16a34a', t: 'Sangat kuat' },
+    ][pw ? Math.max(score, 1) : 0];
+}
 
 export default function Register() {
 
@@ -16,6 +35,8 @@ export default function Register() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     //define state validation
     const [validation, setValidation] = useState([]);
@@ -23,6 +44,7 @@ export default function Register() {
     //function "register"
     const register = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         //call api register
         await api.post('/api/register', {
@@ -31,67 +53,72 @@ export default function Register() {
             password: password,
         })
             .then(() => {
-                //redirect ke halaman login
-                navigate("/login");
+
+                //redirect ke halaman login (bawa email agar langsung terisi)
+                navigate("/login", { state: { registered: true, email } });
             })
             .catch(error => {
+
                 //assign error to state "validation"
                 setValidation(error.response.data);
             })
+            .finally(() => setLoading(false));
     };
 
-    return (
-        <div className="row justify-content-center">
-            <div className="row justify-content-center">
-                <div className="col-md-5">
-                    <div className="card border-0 rounded shadow-sm">
-                        <div className="card-body">
-                            <h4>REGISTER</h4>
-                            <hr />
-                            {
-                                validation.errors && (
-                                    <div className="alert alert-danger mt-2 pb-0">
-                                        {
-                                            validation.errors.map((error, index) => (
-                                                <p key={index}>{error.path} : {error.msg}</p>
-                                            ))
-                                        }
-                                    </div>
-                                )
-                            }
-                            <form onSubmit={register}>
-                                <div className="row">
-                                    <div className="col-md-12 mb-3">
-                                        <div className="form-group">
-                                            <label className="mb-1 fw-bold">Full Name</label>
-                                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="form-control"
-                                                placeholder="Full Name" />
-                                        </div>
-                                    </div>
-                                </div>
+    const strength = passwordStrength(password);
+    const nameError = fieldError(validation, 'name');
+    const emailError = fieldError(validation, 'email');
+    const passwordError = fieldError(validation, 'password');
 
-                                <div className="row">
-                                    <div className="col-md-6 mb-3">
-                                        <div className="form-group">
-                                            <label className="mb-1 fw-bold">Email address</label>
-                                            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control"
-                                                placeholder="Email Address" />
-                                        </div>
-                                    </div>
-                                    <div className="col-md-6 mb-3">
-                                        <div className="form-group">
-                                            <label className="mb-1 fw-bold">Password</label>
-                                            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-control"
-                                                placeholder="Password" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="submit" className="btn btn-primary w-100">REGISTER</button>
-                            </form>
-                        </div>
+    return (
+        <AuthLayout title="Buat akun baru ✨" subtitle="Gratis, dan hanya butuh kurang dari satu menit.">
+
+            {validation.message && !validation.errors && (
+                <div className="alert alert-danger alert-soft"><i className="bi bi-x-circle-fill"></i>{validation.message}</div>
+            )}
+
+            <form onSubmit={register} noValidate>
+                <div className="mb-3">
+                    <label htmlFor="name">Nama lengkap</label>
+                    <div className="input-icon">
+                        <i className="bi bi-person"></i>
+                        <input id="name" type="text" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)}
+                            className={`form-control ${nameError ? 'is-invalid' : ''}`} placeholder="Nama lengkap" />
                     </div>
+                    <FieldError message={nameError} />
                 </div>
-            </div>
-        </div>
+
+                <div className="mb-3">
+                    <label htmlFor="email">Email</label>
+                    <div className="input-icon">
+                        <i className="bi bi-envelope"></i>
+                        <input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)}
+                            className={`form-control ${emailError ? 'is-invalid' : ''}`} placeholder="nama@email.com" />
+                    </div>
+                    <FieldError message={emailError} />
+                </div>
+
+                <div className="mb-4">
+                    <label htmlFor="password">Password</label>
+                    <div className="input-icon">
+                        <i className="bi bi-lock"></i>
+                        <input id="password" type={showPassword ? 'text' : 'password'} autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)}
+                            className={`form-control ${passwordError ? 'is-invalid' : ''}`} placeholder="Minimal 6 karakter" />
+                        <button type="button" className="toggle-pw" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}>
+                            <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                        </button>
+                    </div>
+                    <div className="pw-meter"><i style={{ width: strength.w, background: strength.c }}></i></div>
+                    {password && <small style={{ color: strength.c, fontWeight: 600 }}>{strength.t}</small>}
+                    <FieldError message={passwordError} />
+                </div>
+
+                <button type="submit" className="btn btn-primary btn-auth w-100" disabled={loading}>
+                    {loading ? <><span className="spinner-border spinner-border-sm me-2"></span>Mendaftarkan…</> : <>DAFTAR <i className="bi bi-arrow-right ms-1"></i></>}
+                </button>
+            </form>
+
+            <p className="auth-switch">Sudah punya akun? <Link to="/login">Login di sini</Link></p>
+        </AuthLayout>
     )
 }

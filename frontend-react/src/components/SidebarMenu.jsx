@@ -1,5 +1,5 @@
-//import Link from react router dom
-import { Link, useNavigate } from "react-router-dom";
+//import NavLink dan useNavigate dari react router dom
+import { NavLink, useNavigate } from "react-router-dom";
 
 //import hook react
 import React, { useContext } from "react";
@@ -10,6 +10,14 @@ import Cookies from 'js-cookie'
 //import context
 import { AuthContext } from '../context/AuthContext';
 
+//inisial nama untuk avatar
+export const initials = (name = '') => name.trim().split(/\s+/).slice(0, 2).map((w) => w[0]?.toUpperCase()).join('') || '?';
+
+//ambil data user yang sedang login dari cookie
+export const currentUser = () => {
+    try { return JSON.parse(Cookies.get('user') || '{}'); } catch { return {}; }
+};
+
 export default function SidebarMenu() {
 
     // Menggunakan hook `useNavigate` untuk navigasi
@@ -17,6 +25,8 @@ export default function SidebarMenu() {
 
     //destructure context "setIsAuthenticated"
     const { setIsAuthenticated } = useContext(AuthContext);
+
+    const user = currentUser();
 
     // method to handle logout
     const logout = () => {
@@ -33,18 +43,17 @@ export default function SidebarMenu() {
     }
 
     return (
-        <div className="card border-0 rounded shadow-sm">
-            <div className="card-header">
-                MAIN MENU
+        <div className="side-card">
+            <div className="side-user">
+                <div className="avatar">{initials(user.name)}</div>
+                <div><b>{user.name || 'User'}</b><span>{user.email}</span></div>
             </div>
-            <div className="card-body">
-                <div className="list-group">
-                    <Link to="/admin/dashboard" className="list-group-item list-group-item-action">Dashboard</Link>
-
-                    <Link to="/admin/users" className="list-group-item list-group-item-action">Users</Link>
-                    <a onClick={logout} className="list-group-item list-group-item-action" style={{ cursor: 'pointer' }}>Logout</a>
-                </div>
-            </div>
+            <div className="side-title">Main menu</div>
+            <nav className="side-nav">
+                <NavLink to="/admin/dashboard"><i className="bi bi-grid-1x2"></i>Dashboard</NavLink>
+                <NavLink to="/admin/users"><i className="bi bi-people"></i>Users</NavLink>
+                <a onClick={logout} className="logout" role="button"><i className="bi bi-box-arrow-right"></i>Logout</a>
+            </nav>
         </div>
     )
 }
