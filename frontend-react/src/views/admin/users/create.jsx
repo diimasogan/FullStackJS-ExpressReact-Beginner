@@ -14,7 +14,7 @@ import Cookies from 'js-cookie';
 import api from '../../../services/api';
 
 //get token from cookies
-const token = Cookies.get('token');
+//token dibaca saat request dikirim (bukan saat file dimuat), agar tetap benar setelah login tanpa refresh
 
 export default function UsersCreate() {
 
@@ -34,7 +34,7 @@ export default function UsersCreate() {
         e.preventDefault();
 
         //call api
-        api.defaults.headers.common['Authorization'] = token;
+        api.defaults.headers.common['Authorization'] = Cookies.get('token');
         await api.post('/api/admin/users', {
             name: name,
             email: email,

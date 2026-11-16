@@ -14,7 +14,7 @@ import Cookies from 'js-cookie';
 import api from '../../../services/api';
 
 //get token from cookies
-const token = Cookies.get('token');
+//token dibaca saat request dikirim (bukan saat file dimuat), agar tetap benar setelah login tanpa refresh
 
 export default function UsersEdit() {
 
@@ -34,6 +34,9 @@ export default function UsersEdit() {
 
     //method fetchDetailUser
     const fetchDetailUser = async () => {
+
+        //kirim token juga saat mengambil detail (halaman ini bisa dibuka langsung / di-refresh)
+        api.defaults.headers.common['Authorization'] = Cookies.get('token');
         
         //fetch data
         await api.get(`/api/admin/users/${id}`)
@@ -58,7 +61,7 @@ export default function UsersEdit() {
         e.preventDefault();
 
         //call api
-        api.defaults.headers.common['Authorization'] = token;
+        api.defaults.headers.common['Authorization'] = Cookies.get('token');
         await api.put(`/api/admin/users/${id}`, {
             name: name,
             email: email,

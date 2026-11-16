@@ -4,6 +4,9 @@ import AppRoutes from './routes';
 //import Link from react router dom
 import { Link } from "react-router-dom";
 
+//import banner mode demo
+import DemoBanner from "./components/DemoBanner";
+
 export default function App() {
 
   return (
@@ -31,6 +34,8 @@ export default function App() {
         </div>
       </div>
     </nav>
+
+    {import.meta.env.VITE_DEMO === 'true' && <DemoBanner />}
 
     <div className="container mt-5">
       <AppRoutes />
